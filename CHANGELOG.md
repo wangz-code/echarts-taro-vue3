@@ -1,4 +1,10 @@
+
+
+
 # Changelog
+
+### [1.1.3] 删除 h5 支持,仅支持微信小程序
+
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 

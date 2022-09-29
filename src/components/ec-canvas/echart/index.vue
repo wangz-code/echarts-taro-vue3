@@ -50,7 +50,7 @@ export default {
 						const doFn = () => {
 							count++;
 							wx.createSelectorQuery()
-								.select(`.${this.uid}`)
+								.select(`.${uid}`)
 								.fields({
 									node: true,
 									size: true,
@@ -79,7 +79,9 @@ export default {
 		};
 
 		Taro.useReady(() => {
-			emit("register", { initChart });
+			setTimeout(()=>{
+				emit("register", { initChart });
+			},100)
 		});
 		return { ...toRefs(state) };
 	},

@@ -1,56 +1,58 @@
 <template>
-  <view class="bar-chart">
-    <e-chart ref="vueref0" canvas-id="bar-canvas" />
+  <view>
+    <view class="canvas-area">
+      <EChart @register="regLineChart" id="linecanvas" canvas-id="linecanvas" />
+    </view>
+    <view class="canvas-area">
+      <EChart @register="regBarChart" id="barcanvas" canvas-id="barcanvas" />
+    </view>
   </view>
 </template>
 
+<style>
+.row {
+  display: flex;
+  width: 100wh;
+  height: 100vh;
+}
+.canvas-area {
+  width: 50wh;
+  height: 50vh;
+}
+</style>
 <script>
-import Taro from "@tarojs/taro";
-import { EChart } from "@/components/ec-canvas";
-import "./index.less";
-
+import { EChart } from "../../components/ec-canvas";
+import { barOptions, lineOptions } from "./options";
 export default {
   name: "Index",
   components: {
     EChart,
   },
-  data() {
-    return {};
-  },
-  mounted() {
-    let option = {
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          // 坐标轴指示器，坐标轴触发有效
-          type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-        },
-      },
-      xAxis: {
-        type: "category",
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      },
-      yAxis: {
-        type: "value",
-      },
-      series: [
-        {
-          data: [120, 200, 150, 80, 70, 110, 130],
-          type: "bar",
-        },
-      ],
+  setup() {
+    // 折线图
+    const regLineChart = async ({ initChart }) => {
+      const chart = await initChart(); // 初始化图表
+      chart.setOption(lineOptions);
+      setInterval(() => {
+        // chart.clear(); // 清除图表
+        let firstValue = lineOptions.series[0].data.shift();
+        lineOptions.series[0].data.push(firstValue);
+        chart.setOption(lineOptions);
+      }, 1000);
     };
 
-    Taro.nextTick(() => {
-      setTimeout(() => {
-        this.$refs.vueref0.refresh(option); // 初始化图表
-        setInterval(() => {
-          let firstValue = option.series[0].data.shift();
-          option.series[0].data.push(firstValue);
-          this.$refs.vueref0.setOption(option); // 异步更新图表数据
-        }, 2000);
-      }, 200);
-    });
+    // 柱状图
+    const regBarChart = async ({ initChart }) => {
+      const chart = await initChart(); // 初始化图表
+      chart.setOption(barOptions);
+      setInterval(() => {
+        // chart.clear(); // 清除图表
+        let firstValue = barOptions.series[0].data.shift();
+        barOptions.series[0].data.push(firstValue);
+        chart.setOption(barOptions);
+      }, 1000);
+    };
+    return { regBarChart, regLineChart };
   },
 };
 </script>

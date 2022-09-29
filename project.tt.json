@@ -1,8 +1,8 @@
 {
   "miniprogramRoot": "./",
-  "projectname": "myApp1",
-  "description": "demo",
-  "appid": "touristappid",
+  "projectname": "taro-bridge",
+  "description": "bridge",
+  "appid": "wx7a90cde8b672a238",
   "setting": {
     "urlCheck": true,
     "es6": false,

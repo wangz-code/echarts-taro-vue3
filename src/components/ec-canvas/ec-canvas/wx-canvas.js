@@ -1,138 +1,119 @@
+/*
+ * @Author: wangqz
+ * @Date: 2022-09-29
+ * @LastEditTime: 2022-09-29
+ * @Description: content
+ */
 export default class WxCanvas {
-  constructor(ctx, canvasId, isNew, canvasNode) {
-    this.ctx = ctx;
-    this.canvasId = canvasId;
-    this.chart = null;
-    this.isNew = isNew;
-    if (isNew) {
-      this.canvasNode = canvasNode;
-    } else {
-      this._initStyle(ctx);
-    }
+	constructor(ctx, canvasId, isNew, canvasNode) {
+		this.ctx = ctx;
+		this.canvasId = canvasId;
+		this.chart = null;
+		this.isNew = isNew;
+		if (isNew) {
+			this.canvasNode = canvasNode;
+		} else {
+			this._initStyle(ctx);
+		}
 
-    // this._initCanvas(zrender, ctx);
+		// this._initCanvas(zrender, ctx);
 
-    this._initEvent();
-  }
+		this._initEvent();
+	}
 
-  getContext(contextType) {
-    if (contextType === "2d") {
-      return this.ctx;
-    }
-  }
+	getContext(contextType) {
+		if (contextType === "2d") {
+			return this.ctx;
+		}
+	}
 
-  // canvasToTempFilePath(opt) {
-  //   if (!opt.canvasId) {
-  //     opt.canvasId = this.canvasId;
-  //   }
-  //   return wx.canvasToTempFilePath(opt, this);
-  // }
+	// canvasToTempFilePath(opt) {
+	//   if (!opt.canvasId) {
+	//     opt.canvasId = this.canvasId;
+	//   }
+	//   return wx.canvasToTempFilePath(opt, this);
+	// }
 
-  setChart(chart) {
-    this.chart = chart;
-  }
+	setChart(chart) {
+		this.chart = chart;
+	}
 
-  addEventListener() {
-    // noop
-  }
-  attachEvent() {
-    // noop
-  }
+	addEventListener() {
+		// noop
+	}
 
-  detachEvent() {
-    // noop
-  }
+	attachEvent() {
+		// noop
+	}
 
-  _initCanvas(zrender, ctx) {
-    zrender.util.getContext = function () {
-      return ctx;
-    };
+	detachEvent() {
+		// noop
+	}
 
-    zrender.util.$override("measureText", function (text, font) {
-      ctx.font = font || "12px sans-serif";
-      return ctx.measureText(text);
-    });
-  }
+	_initCanvas(zrender, ctx) {
+		zrender.util.getContext = function () {
+			return ctx;
+		};
 
-  _initStyle(ctx) {
-    var styles = [
-      "fillStyle",
-      "strokeStyle",
-      "globalAlpha",
-      "textAlign",
-      "textBaseAlign",
-      "shadow",
-      "lineWidth",
-      "lineCap",
-      "lineJoin",
-      "lineDash",
-      "miterLimit",
-      "fontSize"
-    ];
+		zrender.util.$override("measureText", function (text, font) {
+			ctx.font = font || "12px sans-serif";
+			return ctx.measureText(text);
+		});
+	}
 
-    styles.forEach((style) => {
-      Object.defineProperty(ctx, style, {
-        set: (value) => {
-          if (
-            (style !== "fillStyle" && style !== "strokeStyle") ||
-            (value !== "none" && value !== null)
-          ) {
-            ctx["set" + style.charAt(0).toUpperCase() + style.slice(1)](value);
-          }
-        }
-      });
-    });
+	_initStyle(ctx) {
+		ctx.createRadialGradient = () => {
+			return ctx.createCircularGradient(arguments);
+		};
+	}
 
-    ctx.createRadialGradient = () => {
-      return ctx.createCircularGradient(arguments);
-    };
-  }
+	_initEvent() {
+		this.event = {};
+		const eventNames = [
+			{
+				wxName: "touchStart",
+				ecName: "mousedown",
+			},
+			{
+				wxName: "touchMove",
+				ecName: "mousemove",
+			},
+			{
+				wxName: "touchEnd",
+				ecName: "mouseup",
+			},
+			{
+				wxName: "touchEnd",
+				ecName: "click",
+			},
+		];
+		eventNames.forEach((name) => {
+			this.event[name.wxName] = (e) => {
+				const touch = e.touches[0];
+				this.chart.getZr().handler.dispatch(name.ecName, {
+					zrX: name.wxName === "tap" ? touch.clientX : touch.x,
+					zrY: name.wxName === "tap" ? touch.clientY : touch.y,
+					preventDefault: () => {},
+					stopImmediatePropagation: () => {},
+					stopPropagation: () => {},
+				});
+			};
+		});
+	}
 
-  _initEvent() {
-    this.event = {};
-    const eventNames = [
-      {
-        wxName: "touchStart",
-        ecName: "mousedown"
-      },
-      {
-        wxName: "touchMove",
-        ecName: "mousemove"
-      },
-      {
-        wxName: "touchEnd",
-        ecName: "mouseup"
-      },
-      {
-        wxName: "touchEnd",
-        ecName: "click"
-      }
-    ];
+	set width(w) {
+		if (this.canvasNode) this.canvasNode.width = w;
+	}
+	set height(h) {
+		if (this.canvasNode) this.canvasNode.height = h;
+	}
 
-    eventNames.forEach((name) => {
-      this.event[name.wxName] = (e) => {
-        const touch = e.touches[0];
-        this.chart.getZr().handler.dispatch(name.ecName, {
-          zrX: name.wxName === "tap" ? touch.clientX : touch.x,
-          zrY: name.wxName === "tap" ? touch.clientY : touch.y
-        });
-      };
-    });
-  }
-
-  set width(w) {
-    if (this.canvasNode) this.canvasNode.width = w;
-  }
-  set height(h) {
-    if (this.canvasNode) this.canvasNode.height = h;
-  }
-
-  get width() {
-    if (this.canvasNode) return this.canvasNode.width;
-    return 0;
-  }
-  get height() {
-    if (this.canvasNode) return this.canvasNode.height;
-    return 0;
-  }
+	get width() {
+		if (this.canvasNode) return this.canvasNode.width;
+		return 0;
+	}
+	get height() {
+		if (this.canvasNode) return this.canvasNode.height;
+		return 0;
+	}
 }
