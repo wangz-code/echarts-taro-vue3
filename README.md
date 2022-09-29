@@ -11,8 +11,10 @@
 > 项目基于  https://github.com/beezen/echarts4taro3 删减了 h5相关的代码
 
 基于 Taro 3.x 框架构建的微信小程序版本 echarts5 跨端组件，及使用示例。
-删除 h5 支持,仅支持微信小程序
-项目中的 echart 使用的是全尺寸的 echarts-5.4.0.zip , 需要减少尺寸自行定制
+
+删除 h5 支持,仅支持微信小程序。
+
+项目中的 echart 使用的是全尺寸的 echarts-5.4.0.zip , 需要减少尺寸自行定制, (下载定制Echart 替换时不要勾选压缩)。
 
 ## 运行环境
 
