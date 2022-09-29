@@ -26,7 +26,6 @@ function wrapTouch(event) {
 
 export default {
   name: "EcCanvas",
-  data() {},
   props: {
     canvasId: {
       type: String,
@@ -92,9 +91,11 @@ export default {
           const canvasHeight = res[0].height;
           const ctx = canvasNode.getContext("2d");
           const canvas = new WxCanvas(ctx, canvasId, true, canvasNode);
-          echarts.setCanvasCreator(() => {
-            return canvas;
-          });
+          echarts.setPlatformAPI({
+            createCanvas() {
+              return canvas;
+            },
+          })
           if (typeof callback === "function") {
             this.chart = callback(canvas, canvasWidth, canvasHeight, canvasDpr);
           } else if (typeof ec.onInit === "function") {

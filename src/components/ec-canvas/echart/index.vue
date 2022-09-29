@@ -18,7 +18,6 @@ export default {
 		},
 	},
 	emits: ["register"],
-
 	setup(_, { emit }) {
 		const uid = `canvas-${Date.now()}-${Math.floor(Math.random() * 10000)}`; // 唯一标记
 		const state = reactive({
@@ -79,9 +78,7 @@ export default {
 		};
 
 		Taro.useReady(() => {
-			setTimeout(()=>{
-				emit("register", { initChart });
-			},100)
+			emit("register", { initChart });
 		});
 		return { ...toRefs(state) };
 	},
