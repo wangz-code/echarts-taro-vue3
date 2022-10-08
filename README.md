@@ -1,20 +1,19 @@
 <!--
  * @Author: wangqz
  * @Date: 2022-09-29
- * @LastEditTime: 2022-09-29
+ * @LastEditTime: 2022-10-08
  * @Description: content
 -->
 
-
 # echarts5 + taro3 + vue3
 
-> 项目基于  https://github.com/beezen/echarts4taro3 删减了 h5相关的代码
+> 项目基于 https://github.com/beezen/echarts4taro3 删减了 h5 相关的代码
 
 基于 Taro 3.x 框架构建的微信小程序版本 echarts5 跨端组件，及使用示例。
 
 删除 h5 支持,仅支持微信小程序。
 
-项目中的 echart 使用的是全尺寸的 echarts-5.4.0.zip , 需要减少尺寸自行定制, (下载定制Echart 替换时不要勾选压缩)。
+项目中的 echart 使用的是全尺寸的 echarts-5.4.0.zip , 需要减少尺寸自行定制, (下载定制 Echart 替换时不要勾选压缩)。
 
 ## 运行环境
 
@@ -23,23 +22,21 @@
 ```bash
  Taro v3.5.6
 ```
-##  git仓库运行
+
+## git 仓库运行
 
 ```
 	git clone  https://github.com/wangz-code/echarts-taro-vue3
 
 	npm run install
 	npm run dev
- ```
-
-
+```
 
 ## 快速开始
 
-
 方式一：拷贝引用
 
-1、下载组件： /src/components 下 `ec-canvas` 
+1、下载组件： /src/components 下 `ec-canvas`
 
 2、拷贝项目 /src/components 下 `ec-canvas` 跨端组件，到业务项目中直接引用
 
@@ -61,73 +58,69 @@
 
 ```html
 <template>
-	<view class="bar-chart">
-		<EChart @register="regChart" id="bar-canvas" canvas-id="bar-canvas" />
-	</view>
+  <view class="bar-chart">
+    <EChart @register="regChart" id="bar-canvas" canvas-id="bar-canvas" />
+  </view>
 </template>
 
 <style>
-.bar-chart {
-	width: 200px;
-	height: 200px;
-}
+  .bar-chart {
+    width: 200px;
+    height: 200px;
+  }
 </style>
 <script>
-import { EChart } from "../../components/ec-canvas";
-export default {
-	name: "Index",
-	components: {
-		EChart,
-	},
-	setup() {
-		let options = {
-			tooltip: {
-				trigger: "axis",
-				axisPointer: {
-					type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-				},
-			},
-			xAxis: {
-				type: "category",
-				data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			},
-			yAxis: {
-				type: "value",
-			},
-			series: [
-				{
-					data: [120, 200, 150, 80, 70, 110, 130],
-					type: "bar",
-				},
-			],
-		};
+  import { EChart } from "../../components/ec-canvas";
+  export default {
+    name: "Index",
+    components: {
+      EChart,
+    },
+    setup() {
+      let options = {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+          },
+        },
+        xAxis: {
+          type: "category",
+          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data: [120, 200, 150, 80, 70, 110, 130],
+            type: "bar",
+          },
+        ],
+      };
 
-		const regChart = async ({ initChart }) => {
-			const chart = await initChart(); // 初始化图表
-			chart.setOption(options);
-      // 随机渲染
-			// setInterval(() => {
-			// 	// chart.clear(); // 清除图表
-			// 	let firstValue = options.series[0].data.shift();
-			// 	options.series[0].data.push(firstValue);
-			// 	chart.setOption(options);
-			// }, 1000);
-		};
-		return { regChart };
-	},
-};
+      const regChart = async ({ initChart }) => {
+        const chart = await initChart(); // 初始化图表
+        chart.setOption(options);
+      };
+      return { regChart };
+    },
+  };
 </script>
 
+// 使用 hooks
+<script>
+	import { useEcharts } from "../../components/ec-canvas/echart/hooks";
+	const [regChart, { setOption }] = useEcharts();
 
+	setOption(options)
 
-
+</script>
 ```
-
 
 ## 效果图
 
 ![](https://raw.githubusercontent.com/WangSunio/img/main/images/WX20220929-172627%402x.png)
-
 
 ## 注意事项
 
